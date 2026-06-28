@@ -24,7 +24,7 @@ export const sideNavLinks = [
     },
     {
         id:4,
-        url: '#',
+        url: '/dashboard/room-types',
         label: "Room Types",
         roles: ["admin"],
         icon: Bed
