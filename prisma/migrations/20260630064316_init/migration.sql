@@ -28,11 +28,13 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Room" (
     "id" TEXT NOT NULL,
+    "images" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "room_number" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     "pricePerNight" DOUBLE PRECISION NOT NULL,
     "status" "RoomStatus" NOT NULL DEFAULT 'Available',
     "description" TEXT NOT NULL,
+    "amenities" TEXT[],
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

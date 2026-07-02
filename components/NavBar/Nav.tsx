@@ -23,7 +23,7 @@ const {resolvedTheme, setTheme} = useTheme();
             ))}
           </div>
           <UserButton size="icon"/>
-          <button aria-label="Toggle theme" onClick={()=>setTheme(resolvedTheme === "dark" ? "light":"dark")}>
+          <button aria-label="Toggle theme" onClick={()=>setTheme(resolvedTheme === "light" ? "dark":"light")}>
             {resolvedTheme === "light" ? (<Moon size={20}/>):(<Sun size={20}/>)}
           </button>
         </div>
