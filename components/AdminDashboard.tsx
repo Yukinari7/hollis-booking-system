@@ -47,7 +47,7 @@ if(hour < 12) {
       </Card>
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Today's Arrivals</CardTitle>
+          <CardTitle className="text-lg">Today&apos;s Arrivals</CardTitle>
           <CardDescription className="text-2xl">0</CardDescription>
         </CardHeader>
         <CardContent>0 pending check-in</CardContent>

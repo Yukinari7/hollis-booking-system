@@ -18,15 +18,13 @@ const formState: FormState = {
 };
 
 export default function CreateStaffForm() {
-    const [state, formAction, isPending] = useActionState(
-        createStaffAction,
-        formState);
+    const [state, formAction, isPending] = useActionState(createStaffAction, formState);
     useEffect(()=> {
         if(!state.success && state.message) toast.error(state.message);
         if(state.success) {
             toast.success('Staff Account created successfully');
         }
-    },[state])
+    },[state]);
 
     const [showPassword, setShowPassword] = useState(false);
     const toggleVisibility = () => setShowPassword(!showPassword)

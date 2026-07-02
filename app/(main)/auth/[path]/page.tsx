@@ -1,5 +1,5 @@
 
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
 import { AuthView } from "@neondatabase/auth/react";
 
 export const dynamicParams = false

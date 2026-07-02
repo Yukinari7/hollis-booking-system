@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Poppins, Geist } from "next/font/google";
+import { Poppins } from "next/font/google";
 import "./globals.css";
-import { auth } from "@/lib/auth/server";
 import { NeonAuthUIProvider } from "@neondatabase/auth/react";
 import { authClient } from "@/lib/auth/client";
 import "react-toastify/dist/ReactToastify.css";
@@ -30,7 +29,7 @@ export default function RootLayout({
     >
       
       <body>
-      <NeonAuthUIProvider authClient={authClient as any} social={{ providers: ['google'] }}>
+      <NeonAuthUIProvider authClient={authClient} social={{ providers: ['google'] }}>
       <main>
       {children}
        <ToastContainer

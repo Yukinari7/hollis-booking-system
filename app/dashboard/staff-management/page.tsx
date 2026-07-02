@@ -58,7 +58,7 @@ export default async function page({ searchParams }: PageProps) {
         <div className="border-b border-gray-300 pb-2">
             <h1 className="text-lg md:text-xl font-semibold">Staff Management</h1>
         </div>
-        <div className="flex flex-col md:flex-row gap-3">
+        <div className="flex flex-col md:flex-row gap-2">
             <Dialog>
                 <DialogTrigger asChild>
                     <Button type="button" className="w-fit p-4.5 bg-blue-600 hover:bg-blue-700">Add Staff</Button>

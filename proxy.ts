@@ -22,6 +22,6 @@ export default function proxy(request: NextRequest) {
 export const config = {
   matcher: [
     // Protected routes requiring authentication
-    '/account/:path*', '/dashboard/:path*', '/bookings/:path*'
+    '/account/:path*', '/dashboard/:path*', '/bookings/:path*', '/rooms/:path*', '/payments/:path*',
   ],
 };
