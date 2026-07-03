@@ -11,7 +11,7 @@ export default async function page() {
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)+/g, "")
-      }
+    }
     const rows = await prisma.room.findMany({
         orderBy: {type: "asc"},
         select: {
