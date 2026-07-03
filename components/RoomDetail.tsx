@@ -19,7 +19,6 @@ interface RoomDetailProps {
 }
 
 export function RoomDetail({ room }: RoomDetailProps) {
-  // Helper utility to clean numeric presentation values
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -27,6 +26,13 @@ export function RoomDetail({ room }: RoomDetailProps) {
       minimumFractionDigits: 0,
     }).format(amount);
   };
+  const slugify = (text: string) => {
+        return text
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)+/g, "")
+    }
+  const roomSlug = slugify(`${room.type} ${room.room_number}`);
 
   return (
     <div className="space-y-6 py-10">
@@ -133,8 +139,8 @@ export function RoomDetail({ room }: RoomDetailProps) {
           </div>
 
           {/* Core booking call-to-action pipeline placeholder trigger button */}
-          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-5 rounded-xl shadow-sm transition">
-            Proceed to Reservation System
+          <Button asChild className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-5 rounded-xl shadow-sm transition">
+            <Link href={`/rooms/${room.id}/book?slug=${roomSlug}`}>Proceed to Reservation System</Link>
           </Button>
         </div>
 

@@ -44,7 +44,6 @@ export async function createStaffAction(
       const session = await getSession();
 
       if (!session.data?.user) {
-        
         return {
           success: false,
           message: "Your session expired. Please sign in again.",
@@ -226,5 +225,77 @@ export async function deleteRoomAction(id: string){
         return {
             success: false, message: "Failed to delete room"
         }
+    }
+}
+
+function parseCreateBooking(formData: FormData) {
+    const name = String(formData.get("name")?? "").trim();
+    if (name.length <3 || name.length > 120) {
+        throw new Error ("Name must be between 3 to 120 characters")
+    }
+    const email = String(formData.get("email")?? "").trim().toLowerCase();
+    const phone = String(formData.get("phone"));
+    const checkIn = String(formData.get("checkIn")?? "").trim();
+    if(!checkIn) {
+        throw new Error("Check-In date required");
+    }
+
+    const checkOut = String(formData.get("checkOut")?? "").trim();
+    if(!checkOut) {
+        throw new Error("Check-Out date required");
+    }
+
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut)
+
+    if (checkOutDate <= checkInDate) {
+        throw new Error("Check-out date must be before check-in date")
+    }
+
+    return {
+        name,
+        email,
+        phone,
+        checkInDate,
+        checkOutDate,
+    }
+}
+
+export async function createBookingAction(roomId: string, prevState: FormState, formData: FormData): Promise<FormState> {
+    try {
+        const session = await getSession();
+        if (!session.data?.user.id) {
+            return {success: false, message: "Your session expired. Please sign in"}
+        }
+
+        const input = parseCreateBooking(formData);
+
+        const room = await prisma.room.findUnique({
+            where: { id: roomId }
+        })
+        if (!room) {
+            throw new Error("Room not found")
+        }
+
+        const timeDifference = input.checkOutDate.getTime() - input.checkInDate.getTime();
+        const totalNights = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+        const calculatedPrice = totalNights * room.pricePerNight  
+
+        await prisma.booking.create({
+            data: {
+                userId: session.data.user.id,
+                roomId: room.id,
+                checkIn: input.checkInDate,
+                checkOut: input.checkOutDate,
+                totalPrice: calculatedPrice
+            }
+        })
+
+        revalidatePath(`/rooms/${room.id}`)
+        return {
+            success: true, message: "Booking done successfully"
+        }
+    } catch (error) {
+        return {success: false, message: "Failed to book room"}
     }
 }
