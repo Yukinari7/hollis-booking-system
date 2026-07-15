@@ -45,14 +45,14 @@ export default function CreateStaffForm() {
                         <div className="flex flex-col justify-between md:flex-row gap-3">
                             <div className="space-y-2 w-full">
                                 <Label htmlFor="name">Name</Label>
-                                <Input id="name" name="name" required placeholder="Staff Name"></Input>
+                                <Input id="name" name="name" autoComplete="given-name" required placeholder="Staff Name"></Input>
                             </div>
                             <div className="space-y-2 w-full">
                                 <Label htmlFor="email">Email</Label>
-                                <Input id="email" name="email" type="email" required placeholder="david@example.com"></Input>
+                                <Input id="email" name="email" type="email" autoComplete="off" required placeholder="david@example.com"></Input>
                             </div>
                         </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div className="space-y-2">
                                     <Label htmlFor="department">Department</Label>
                                     <select id="department" name="department" defaultValue="Reception" required className="w-full flex h-8 rounded-lg border px-2">
@@ -62,6 +62,11 @@ export default function CreateStaffForm() {
                                     </select>
                                 </div>
                                 <div className="space-y-2 w-full">
+                                    <Label htmlFor="phone">Phone</Label>
+                                <Input id="phone" name="phone" type="tel" autoComplete="off" required placeholder="123-456-7890"></Input>
+                            </div>
+                            </div>
+                            <div className="space-y-2 w-fit">
                                     <Label htmlFor="password">Temporary Password</Label>
                                     <div className="flex items-center relative">
                                         <Input id="password" name="password" className="pr-10 w-full" type={showPassword ? "text":"password"} required/>
@@ -70,7 +75,6 @@ export default function CreateStaffForm() {
                                         </button>
                                     </div>
                                 </div>
-                            </div>
                             <button type="submit" disabled={isPending} className="bg-blue-600 hover:bg-blue-700 w-fit p-2 disabled:opacity-50 text-white text-sm rounded-lg transition">
                                 {isPending ? "Generating Account...":"Create Staff Account"}
                             </button>

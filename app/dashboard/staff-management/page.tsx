@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Role } from "@/lib/generated/prisma/enums";
+import { StaffRole } from "@/lib/generated/prisma/enums";
 import { Suspense } from "react";
 import { Badge } from "@/components/ui/badge";
 
@@ -24,21 +24,21 @@ export default async function page({ searchParams }: PageProps) {
           { name: { contains: search, mode: "insensitive" as const } },
           { department: { contains: search, mode: "insensitive" as const } }
         ],
-        role: { in: [Role.Staff, Role.Admin] }
+        role: { in: [StaffRole.Staff, StaffRole.Admin] }
       }
     : {
-        role: { in: [Role.Staff, Role.Admin] }
+        role: { in: [StaffRole.Staff, StaffRole.Admin] }
       };
 
   // Fetch the data conditionally from Neon PostgreSQL
-  const staff = await prisma.user.findMany({
+  const staff = await prisma.staff.findMany({
     where: queryFilter,
     select: {
       id: true,
       name: true,
       email: true,
       role: true,
-      Status: true,
+      status: true,
       department: true, // Make sure department exists in your Prisma Schema!
     },
     orderBy: {
@@ -50,7 +50,7 @@ export default async function page({ searchParams }: PageProps) {
         name: r.name,
         email: r.email,
         role: r.role,
-        status: r.Status,
+        status: r.status,
         department: r.department,
     }))
   return (

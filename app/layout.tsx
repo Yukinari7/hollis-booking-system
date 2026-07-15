@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { NeonAuthUIProvider } from "@neondatabase/auth/react";
 import { authClient } from "@/lib/auth/client";
+import { ThemeProvider } from "next-themes";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 
@@ -29,15 +30,14 @@ export default function RootLayout({
     >
       
       <body>
-      <NeonAuthUIProvider authClient={authClient} social={{ providers: ['google'] }}>
-      <main>
-      {children}
-       <ToastContainer
-          position="top-right"
-          autoClose={3000}
-        />
-      </main>
-      </NeonAuthUIProvider>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+        <NeonAuthUIProvider authClient={authClient} social={{ providers: ['google'] }}>
+          <main>
+            {children}
+            <ToastContainer position="top-right" autoClose={3000} />
+          </main>
+        </NeonAuthUIProvider>
+      </ThemeProvider>
       </body>
     </html>
   );

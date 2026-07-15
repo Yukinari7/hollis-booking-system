@@ -1,5 +1,6 @@
 import "@/app/globals.css";
 import Nav from "@/components/NavBar/Nav";
+import ResponsiveNav from "@/components/NavBar/ResponsiveNav";
 
 
 export default async function RootLayout({
@@ -10,7 +11,7 @@ export default async function RootLayout({
 
   return (
     <>
-    <Nav/>
+    <ResponsiveNav/>
     <main className="w-[90%] mx-auto">{children}</main>
     </>
   );

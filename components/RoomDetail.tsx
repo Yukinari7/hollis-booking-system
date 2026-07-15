@@ -20,9 +20,9 @@ interface RoomDetailProps {
 
 export function RoomDetail({ room }: RoomDetailProps) {
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat("en-NG", {
       style: "currency",
-      currency: "USD",
+      currency: "NGN",
       minimumFractionDigits: 0,
     }).format(amount);
   };
@@ -61,12 +61,12 @@ export function RoomDetail({ room }: RoomDetailProps) {
           </div>
 
           {/* Heading Core Metadata block */}
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
             <div>
               <span className="text-xs font-semibold bg-slate-100 text-slate-700 uppercase tracking-wider px-2.5 py-1 rounded-md">
                 {room.room_number}
               </span>
-              <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mt-2 tracking-tight">
+              <h1 className="text-2xl md:text-3xl font-bold mt-2 tracking-tight">
                 {room.type}
               </h1>
             </div>
@@ -76,16 +76,16 @@ export function RoomDetail({ room }: RoomDetailProps) {
             {/* Standard structural floor features list icons */}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-slate-600 text-sm py-2">
               <div className="flex items-center gap-2">
-                <BedDouble className="w-5 h-5 text-slate-400" />
-                <span>King Bed Configuration</span>
+                <BedDouble className="w-5 h-5 text-slate-400 dark:text-white" />
+                <span className="dark:text-gray-300">King Bed Configuration</span>
               </div>
               <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-slate-400" />
-                <span>Up to 2 Guests Max</span>
+                <Users className="w-5 h-5 text-slate-400 dark:text-white" />
+                <span className="dark:text-gray-300">Up to 2 Guests Max</span>
               </div>
               <div className="flex items-center gap-2">
-                <Square className="w-5 h-5 text-slate-400" />
-                <span>45 sq m floorplan</span>
+                <Square className="w-5 h-5 text-slate-400 dark:text-white" />
+                <span className="dark:text-gray-300">45 sq m floorplan</span>
               </div>
             </div>
 
@@ -94,7 +94,7 @@ export function RoomDetail({ room }: RoomDetailProps) {
             {/* Room description copy block summary */}
             <div className="space-y-2">
               <h3 className="font-semibold text-slate-900">Room Overview Description</h3>
-              <p className="text-slate-600 leading-relaxed text-sm md:text-base">
+              <p className="text-slate-600 dark:text-gray-300 leading-relaxed text-sm md:text-base">
                 {room.description?.trim() ? room.description: "No description available."}
               </p>
             </div>
@@ -103,7 +103,7 @@ export function RoomDetail({ room }: RoomDetailProps) {
 
             {/* Premium room amenities pills array list mapping */}
             <div className="space-y-2.5">
-              <h3 className="font-semibold text-slate-900">Available Premium Amenities</h3>
+              <h3 className="font-semibold">Available Premium Amenities</h3>
               <div className="flex flex-wrap gap-2">
                 {room.amenities?.map((amenity, idx) => (
                   <span
