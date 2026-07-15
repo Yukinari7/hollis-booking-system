@@ -51,7 +51,7 @@ export default function CreateRoomForm() {
                     <div className="space-y-2 w-full relative">
                       <Label htmlFor="pricePerNight">Price Per Night</Label>
                       <div className="pointer-events-none absolute pl-3 left-0 -bottom-0.5 flex items-center">
-                        <span className='text-gray-500'>$</span>
+                        <span className='text-gray-500'>N</span>
                       </div>
                       <Input id="pricePerNight" type='number' name="pricePerNight" min="1" required className='pl-7'></Input>
                     </div>

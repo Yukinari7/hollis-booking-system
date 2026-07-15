@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../lib/generated/prisma"
@@ -12,43 +7,64 @@ datasource db {
   provider = "postgresql"
 }
 
-model User {
-  id                    String        @id @default(cuid())
-  name                  String
-  email                 String        @unique
-  phone                 String
-  password              String
-  department            String
-  role                  Role          @default(User)
-  Status                UserStatus    @default(Active)
-  bookings              Booking[]
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt
+//////////////////////////////////////////////////
+// GUESTS (Authenticated through Neon Auth)
+//////////////////////////////////////////////////
+
+model Guest {
+  id        String    @id // Same ID from Neon Auth
+  name      String
+  email     String    @unique
+  phone     String?
+  bookings  Booking[]
+  payments  Payment[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
-enum Role {
-  User
+//////////////////////////////////////////////////
+// STAFF (Managed internally by Admin)
+//////////////////////////////////////////////////
+
+model Staff {
+  id         String      @id @default(cuid())
+  name       String
+  email      String      @unique
+  phone      String?
+  password   String
+  department String
+  role       StaffRole   @default(Staff)
+  status     StaffStatus @default(Active)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+enum StaffRole {
   Staff
   Admin
 }
 
-enum UserStatus {
+enum StaffStatus {
   Active
   Inactive
 }
 
+//////////////////////////////////////////////////
+// ROOMS
+//////////////////////////////////////////////////
+
 model Room {
-  id                    String        @id @default(uuid())
-  images                String[]      @default([])
-  room_number           String        @unique
-  type                  String
-  pricePerNight         Float
-  status                RoomStatus    @default(Available)
-  description           String
-  amenities             String[]
-  bookings              Booking[]
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt
+  id            String     @id @default(uuid())
+  room_number   String     @unique
+  type          String
+  description   String
+  images        String[]   @default([])
+  amenities     String[]
+  pricePerNight Float
+  status        RoomStatus @default(Available)
+  bookings      Booking[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
 }
 
 enum RoomStatus {
@@ -58,23 +74,48 @@ enum RoomStatus {
 }
 
 model Booking {
-  id                    String         @id @default(uuid())
-  userId                String
-  user                  User           @relation(fields: [userId], references: [id], onDelete: Cascade) 
-  roomId                String
-  room                  Room           @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  checkIn               DateTime
-  checkOut              DateTime
-  totalPrice            Float
-  status                BookingStatus  @default(Pending)
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt        
+  id            String        @id @default(uuid())
+  guestId       String
+  guest         Guest         @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  roomId        String
+  room          Room          @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  checkIn       DateTime
+  checkOut      DateTime
+  totalPrice    Float
+  payment       Payment?
+  status        BookingStatus @default(Pending)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
 
 enum BookingStatus {
   Pending
   Confirmed
-  Cancelled
   Checked_In
   Checked_Out
+  Cancelled
+}
+
+model Payment {
+  id         String        @id @default(uuid())
+  reference  String        @unique
+  guestId    String
+  guest      Guest         @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  bookingId  String?       @unique
+  booking    Booking?      @relation(fields: [bookingId], references: [id])
+  amount     Float
+  currency   String        @default("NGN")
+  gateway    String        @default("Paystack")
+  status     PaymentStatus @default(Pending)
+  paidAt     DateTime?
+  refundedAt DateTime?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+}
+
+enum PaymentStatus {
+  Pending
+  Paid
+  Refunded
+  Failed
 }
