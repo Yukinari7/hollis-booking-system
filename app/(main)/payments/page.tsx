@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { getSession } from '@/lib/auth/server'
+import { PaymentStatus } from '@/lib/generated/prisma/enums';
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation';
 
@@ -13,19 +14,9 @@ const page = async () => {
     redirect('/auth/sign-in');
   }
 
-  const guest = await prisma.guest.findUnique({
-    where: {
-      id: session.data.user.id,
-    },
-  });
-
-  if (!guest) {
-    throw new Error('Guest profile not found.');
-  }
-
   const payments = await prisma.payment.findMany({
     where: {
-      guestId: guest.id,
+      guestId: session.data.user.id,
     },
     include: {
       booking: {
@@ -56,7 +47,7 @@ const page = async () => {
     });
   };
 
-  const getStatusClasses = (status: string) => {
+  const getStatusClasses = (status: PaymentStatus) => {
   switch (status) {
     case 'Paid':
       return 'bg-emerald-50 text-emerald-700 ring-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:ring-emerald-500/20'
@@ -78,7 +69,7 @@ const page = async () => {
         {payments.length === 0 ? (
           <Card className="max-w-xl">
             <CardContent className="py-6 text-sm text-muted-foreground">
-              No payments made yet. Your completed reservations will appear here.
+              You haven't made any payments yet. Your completed reservations will appear here.
             </CardContent>
           </Card>
         ) : (
@@ -102,7 +93,7 @@ const page = async () => {
                 <TableBody>
                   {payments.map((payment) => (
                     <TableRow key={payment.id}>
-                      <TableCell className="font-medium">{payment.reference}</TableCell>
+                      <TableCell className="font-medium">{payment.reference.slice(-10)}</TableCell>
                       <TableCell>{formatCurrency(payment.amount)}</TableCell>
                       <TableCell><Badge variant="secondary" className={getStatusClasses(payment.status)}>
                         {payment.status}
@@ -110,7 +101,7 @@ const page = async () => {
                       <TableCell>{payment.booking?.room?.room_number ?? '—'}</TableCell>
                       <TableCell>{formatDate(payment.booking?.checkIn)}</TableCell>
                       <TableCell>{formatDate(payment.booking?.checkOut)}</TableCell>
-                      <TableCell>{formatDate(payment.paidAt)}</TableCell>
+                      <TableCell>{formatDate(payment.paidAt ?? payment.createdAt)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
