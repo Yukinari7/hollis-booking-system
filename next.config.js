@@ -1,11 +1,13 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  allowedDevOrigins: ["192.168.1.101"],
 
-const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: "10mb",
     },
   },
+
   images: {
     remotePatterns: [
       {
@@ -14,9 +16,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+
   typescript: {
     ignoreBuildErrors: true,
-  }
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;

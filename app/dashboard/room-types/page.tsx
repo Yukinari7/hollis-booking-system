@@ -31,10 +31,10 @@ export default async function page() {
         images: e.images
     }))
 
-    const formatDollar = (amount: number) => {
-        return new Intl.NumberFormat('en-US', {
+    const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('en-NG', {
             style: 'currency',
-            currency: 'USD',
+            currency: 'NGN',
             minimumFractionDigits: 0
         }).format(amount);
     }
@@ -88,7 +88,7 @@ export default async function page() {
                     <CardContent>
                         <div className="flex flex-col gap-4">
                             <p className="text-xs">{room.description}</p>
-                            <p className='font-semibold text-base'>{formatDollar(room.pricePerNight)}</p>
+                            <p className='font-semibold text-base'>{formatCurrency(room.pricePerNight)}</p>
                             <div className='flex flex-wrap gap-2'>
                                 {room.amenities.map((amenity, index)=>(
                                     <span key={index} className='text-xs font-medium bg-blue-100 text-blue-700 rounded-full px-2 
