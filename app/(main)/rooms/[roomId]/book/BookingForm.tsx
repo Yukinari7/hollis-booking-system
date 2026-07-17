@@ -216,7 +216,7 @@ export default function BookingForm({ room }: Props) {
       <div>
         <Button
           type="button"
-          onClick={() => router.back()}
+          onClick={() => router.back()} className="active:scale-105"
         >
           <ChevronLeft />
           Back
