@@ -26,7 +26,7 @@ export const Nav = ({open, setOpen}: Props) => {
     <div className="z-1000 flex border-b border-gray-300">
       <div className="mx-auto flex h-12 w-[90%] items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="rounded-md w-6 h-6 p- flex items-center justify-center bg-black dark:bg-zinc-300">
+          <div className="rounded-md w-6 h-6 flex items-center justify-center bg-black dark:bg-zinc-300">
             <p className="text-white dark:text-black font-semibold">H</p>
           </div>
           <Link href={"/"} className="font-bold">
@@ -59,7 +59,7 @@ export const Nav = ({open, setOpen}: Props) => {
             )}
           </button>
           <div className="md:hidden flex">
-            <button onClick={()=>setOpen(!open)} className="relative w-5 h-4 text-black dark:text-white flex flex-col justify-between">
+            <button onClick={()=>setOpen(!open)} aria-label="Open mobile navigation" className="relative w-5 h-4 text-black dark:text-white flex flex-col justify-between active:scale-105">
               <span className={`h-[2px] w-full bg-black dark:bg-white transition-all duration-300
                  ${open ? "rotate-45 translate-y-[8px]":""}`}></span>
               <span className={`h-[2px] w-full bg-black dark:bg-white transition-all duration-300

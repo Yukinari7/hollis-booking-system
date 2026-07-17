@@ -20,9 +20,9 @@ const features = [
 
 const page = () => {
   return (
-    <div className="space-y-10 py-10 md:py-16">
+    <div className="space-y-10 py-10">
       <section className="overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 dark:bg-zinc-900 shadow-xl">
-        <div className="grid items-center gap-8 px-6 py-10 md:grid-cols-[1.1fr_0.9fr] md:px-10 md:py-14 lg:px-14">
+        <div className="grid items-center gap-8 px-6 md:px-10 py-10 md:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-5">
             <h1 className="text-2xl font-semibold leading-tight md:text-5xl lg:text-6xl">
               Experience a stay that feels effortless from start to finish.
@@ -51,7 +51,7 @@ const page = () => {
 
       <section className="grid gap-4 md:grid-cols-3">
         {features.map((feature) => (
-          <Card key={feature.title} className="rounded-2xl border border-slate-200 shadow-sm backdrop-blur">
+          <Card key={feature.title} className="rounded-2xl border border-slate-200 shadow-sm backdrop-blur hover:-translate-y-1 transition-transform duration-300">
             <CardHeader>
               <CardTitle>{feature.title}</CardTitle>
               <CardDescription>{feature.description}</CardDescription>

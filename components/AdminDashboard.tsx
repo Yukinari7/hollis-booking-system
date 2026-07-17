@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Charts } from "@/components/Charts/Charts";
 import { prisma } from "@/lib/prisma";
+import { BookingStatus, PaymentStatus } from "@/lib/generated/prisma/enums";
 
 const formatCurrency = (amount: number) =>
   new Intl.NumberFormat("en-NG", {
@@ -34,7 +36,13 @@ const page = async () => {
     greeting = "Good Evening";
   }
 
-  const [rooms, bookings, paidPayments, todayBookings] = await Promise.all([
+const startOfToday = new Date();
+startOfToday.setHours(0, 0, 0, 0);
+
+const endOfToday = new Date();
+endOfToday.setHours(23, 59, 59, 999);
+
+  const [rooms, bookings, paidPayments, todayBookings, monthlyRevenue] = await Promise.all([
     prisma.room.findMany({
       select: { id: true, status: true },
     }),
@@ -56,14 +64,24 @@ const page = async () => {
     }),
     prisma.payment.aggregate({
       _sum: { amount: true },
-      where: { status: "Paid" },
+      where: { status: PaymentStatus.Paid },
     }),
     prisma.booking.count({
       where: {
+        status: BookingStatus.Confirmed,
         checkIn: {
-          gte: new Date(new Date().setHours(0, 0, 0, 0)),
+          gte: startOfToday,
+          lte: endOfToday,
         },
       },
+    }),
+    prisma.payment.findMany({
+      where: { status: PaymentStatus.Paid },
+      select: {
+        amount: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: "asc" },
     }),
   ]);
 
@@ -72,6 +90,28 @@ const page = async () => {
   const occupancyPercent = totalRooms > 0 ? Math.round((occupiedRooms / totalRooms) * 100) : 0;
   const revenue = paidPayments._sum.amount ?? 0;
   const pendingCheckIn = todayBookings;
+  const revenueByMonth = monthlyRevenue.reduce<Record<string, number>>((acc, payment) => {
+    const month = new Date(payment.createdAt).toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    });
+    acc[month] = (acc[month] ?? 0) + Number(payment.amount ?? 0);
+    return acc;
+  }, {});
+
+  const chartData = Array.from({ length: 6 }, (_, index) => {
+    const monthDate = new Date(today);
+    monthDate.setMonth(today.getMonth() - (5 - index), 1);
+    const month = monthDate.toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
+    });
+
+    return {
+      month,
+      revenue: revenueByMonth[month] ?? 0,
+    };
+  });
 
   return (
     <div className="w-[90%] mx-auto py-5 flex flex-col gap-4">
@@ -125,6 +165,9 @@ const page = async () => {
           <CardHeader>
             <CardTitle className="font-semibold">Revenue</CardTitle>
           </CardHeader>
+          <CardContent>
+            <Charts data={chartData} />
+          </CardContent>
         </Card>
       </div>
       <Card>

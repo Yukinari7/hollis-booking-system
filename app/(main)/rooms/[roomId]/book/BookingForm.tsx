@@ -28,6 +28,8 @@ const formatCurrency = (amount: number) => {
   }).format(amount);
 };
 
+
+
 export default function BookingForm({ room }: Props) {
   const router = useRouter();
   const params = useParams();
@@ -111,9 +113,7 @@ export default function BookingForm({ room }: Props) {
 
       const popup = new PaystackPop();
 
-      const reference =
-        crypto.randomUUID?.() ??
-        `booking_${Date.now()}`;
+   
 
       popup.newTransaction({
         key: paystackKey,
@@ -126,7 +126,7 @@ export default function BookingForm({ room }: Props) {
 
         currency: "NGN",
 
-        ref: reference,
+        ref: `booking_${roomId}_${Date.now()}`,
 
         metadata: {
           custom_fields: [
@@ -148,7 +148,7 @@ export default function BookingForm({ room }: Props) {
           ],
         },
 
-        onSuccess: async (transaction: any) => {
+        onSuccess: async (transaction: { reference?: string }) => {
           try {
             const response = await fetch(
               "/api/paystack/verify",
@@ -189,11 +189,9 @@ export default function BookingForm({ room }: Props) {
             );
 
             router.replace(`/rooms/${roomId}`);
-          } catch (error: any) {
-            toast.error(
-              error.message ??
-                "Unable to verify booking."
-            );
+          } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : "Unable to verify booking.";
+            toast.error(message);
           } finally {
             setIsSubmitting(false);
           }
@@ -205,13 +203,11 @@ export default function BookingForm({ room }: Props) {
           toast.info("Payment cancelled.");
         },
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       setIsSubmitting(false);
 
-      toast.error(
-        error.message ??
-          "Unable to initialize payment."
-      );
+      const message = error instanceof Error ? error.message : "Unable to initialize payment.";
+      toast.error(message);
     }
   }
 

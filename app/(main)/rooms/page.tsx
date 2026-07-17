@@ -125,7 +125,7 @@ export default async function page({ searchParams }: PageProps) {
                     )
                     })}
                 </div>
-                <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-slate-200 bg-white p-3">
+                <div className="flex flex-wrap items-center justify-center gap-2 rounded-lg border border-slate-200 p-3">
                     <p className="text-sm text-slate-600">Page {currentPage} of {totalPages}</p>
                     <div className="flex gap-2">
                         {hasPreviousPage ? (
