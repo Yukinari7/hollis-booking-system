@@ -31,7 +31,7 @@ export default function RootLayout({
       
       <body>
       <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
-        <NeonAuthUIProvider authClient={authClient} social={{ providers: ['google'] }}>
+        <NeonAuthUIProvider authClient={authClient}>
           <main>
             {children}
             <ToastContainer position="top-right" autoClose={3000} />
